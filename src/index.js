@@ -7,11 +7,14 @@ const express = require('express');
 const productosRouter = require('./routes/productos.routes');
 
 //Definicion del puerto para el servidor
-const PUERTO = 3000;
+const PUERTO = 8000;
 
 //Importo la instancia de la base de datos para establecer conexión desde el entrypoint
 
 const bd = require('./config/bd');
+
+//Importo modelos para su sincronización
+const { Productos } = require('./models/index');
 
 //Middleware personalizado:
 const middlewareDePrueba = (req, res, next) => {
@@ -46,8 +49,11 @@ app.get("/", (req, res) => {
 
 async function iniciarServidor() {
   try {
+    // Sincroniza el modelo con la base de datos
+    await Productos.sync();
+    console.log('Modelo sincronizado correctamente');
     await bd.authenticate()
-    console.log('Conexión establecida correctamente');
+    console.log('Conexión con base de datos establecida correctamente');
     //agrego escuchador al servidor en el puerto especificado
     app.listen(PUERTO, () => console.log(`Servidor corriendo en el puerto: ${PUERTO}`));
 

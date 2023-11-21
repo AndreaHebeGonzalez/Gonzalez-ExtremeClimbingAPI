@@ -17,27 +17,28 @@ const productosController = require('../controllers/productos.controller');
     buscarPorId,
     actualizar,
     borrar,
+    
 */
 
 //Importo el middleware validador de errores:
-const validarErrores = require('../middlewares/validadorerr.middleware');
+const { validarErrores } = require('../middlewares/validadorerr.middleware');
 
 //Importo funciones de validación creadas en carpeta middlewares
 const { 
     validarId,
     validarNombre,
     validarPrecio,
-    validarDesc,
+    validarDescripcion,
     validarCaract,
+    validarinformacionTecnica,
     validarStock,
-    validarImg,
     //Validaciones de operaciones de actualización
     validarActualizarNombre,
     validarActualizarDesc,
     validarActualizarCaract,
+    validarActualizarinfoTecnica,
     validarActualizarPrecio,
     validarActualizarStock,
-    validarActualizarImg,
 } = require('../middlewares/productos.middleware');
 
 //Creo los endpoint para el manejo de solicitudes HTTP:
@@ -47,19 +48,7 @@ const {
 productosRouter.get("/", productosController.buscarTodos);
 
 
-productosRouter.post(
-    "/",
-    [   
-    validarId,
-    validarNombre,
-    validarPrecio,
-    validarDesc,
-    validarCaract,
-    validarStock,
-    validarImg,
-    validarErrores
-    ],
-    productosController.agregar
+productosRouter.post("/", [validarNombre,  validarPrecio, validarDescripcion, validarCaract, validarinformacionTecnica, validarStock, validarErrores], productosController.agregar
 );
 
 productosRouter.get(
@@ -71,13 +60,13 @@ productosRouter.get(
 productosRouter.put(
     "/:id",
     [
-    validarId, //Verifico que exista el producto
+    validarId, 
     validarActualizarNombre, 
     validarActualizarDesc,
     validarActualizarCaract,
+    validarActualizarinfoTecnica,
     validarActualizarPrecio,
-    validarActualizarStock, 
-    validarActualizarImg, 
+    validarActualizarStock,
     validarErrores
     ],
     productosController.actualizar
@@ -85,7 +74,7 @@ productosRouter.put(
 
 productosRouter.delete(
     "/:id",
-    [validarId, validarErrores],
+    /* [validarId, validarErrores], */
     productosController.borrar
 );
 
